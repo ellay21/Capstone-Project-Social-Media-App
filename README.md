@@ -14,6 +14,20 @@ The **Django Social Media App** is a **scalable, secure, and user-friendly** web
 ✅ **API Documentation** - Interactive API documentation via Swagger/Postman.
 
 ---
+🛠 Project Branch & Setup
+Branch: setup/config
+
+This branch includes the initial project setup and configuration encompassing:
+
+Creation of a Django project.
+
+Integration of SQLite as the database.
+
+Configuration of Django REST Framework (DRF) with JWT authentication.
+
+Setup for media and static file handling.
+
+Integration with API documentation tools such as Swagger (using drf-yasg).
 
 ## 📥 Installation
 ### 🔹 Clone the Repository
