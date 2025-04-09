@@ -29,9 +29,10 @@ description="Backend API for Social Media App"
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Your API Title",
+      title="Django Social Media API",
       default_version='v1',
-      description="API documentation for your project",
+      description=" Backend API for Social Media App",
+        terms_of_service="https://www.google.com/policies/terms/",
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
