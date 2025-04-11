@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'users',
+    'posts'
 ]
 
 MIDDLEWARE = [
