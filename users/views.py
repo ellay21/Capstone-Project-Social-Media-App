@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
-from .serializers import UserSerializer, UserProfileSerializer
+from .models import Follow
+from .serializers import UserSerializer, UserProfileSerializer, FollowSerializer
 
 User = get_user_model()
 
@@ -32,3 +33,78 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         if self.kwargs.get('pk') == 'me':
             return self.request.user
         return super().get_object()
+
+class FollowUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, user_id):
+        try:
+            user_to_follow = User.objects.get(id=user_id)
+            
+            if request.user == user_to_follow:
+                return Response(
+                    {"detail": "You cannot follow yourself."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            if Follow.objects.filter(follower=request.user, following=user_to_follow).exists():
+                return Response(
+                    {"detail": "You are already following this user."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            follow = Follow.objects.create(follower=request.user, following=user_to_follow)
+            serializer = FollowSerializer(follow)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "User not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+class UnfollowUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, user_id):
+        try:
+            user_to_unfollow = User.objects.get(id=user_id)
+            
+            try:
+                follow = Follow.objects.get(follower=request.user, following=user_to_unfollow)
+                follow.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            except Follow.DoesNotExist:
+                return Response(
+                    {"detail": "You are not following this user."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "User not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+class FollowersListView(generics.ListAPIView):
+    serializer_class = UserSerializer
+    
+    def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return User.objects.none()
+
+        user_id = self.kwargs.get('user_id')
+        return User.objects.filter(following__following_id=user_id)
+
+
+class FollowingListView(generics.ListAPIView):
+    serializer_class = UserSerializer
+    
+    def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return User.objects.none()
+
+        user_id = self.kwargs.get('user_id')
+        return User.objects.filter(followers__follower_id=user_id)
+
+
