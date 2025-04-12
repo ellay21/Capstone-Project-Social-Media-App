@@ -13,5 +13,12 @@ class Post(models.Model):
     
     def __str__(self):
         return f"Post by {self.user.username} at {self.created_at}"
-    
-    
+
+    @property
+    def likes_count(self):
+        return self.likes.count()
+
+    @property
+    def comments_count(self):
+        return self.comments.count()
+
