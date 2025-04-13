@@ -7,10 +7,15 @@ The **Django Social Media App** is a **scalable, secure, and user-friendly** web
 
 ## 🎯 Features
 ✅ **User Authentication** - Secure registration & JWT-based login/logout.
+
 ✅ **User Profiles** - Create, edit, and view user profiles.
+
 ✅ **Posting System** - Share, update, and delete text & image-based posts.
+
 ✅ **Engagements** - Like/unlike posts and comment on them.
+
 ✅ **Follow System** - Follow/unfollow users and track followers/following.
+
 ✅ **API Documentation** - Interactive API documentation via Swagger/Postman.
 
 ---
